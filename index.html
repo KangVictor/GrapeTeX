@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="HandheldFriendly" content="true" />
+
+    <title>Math iink</title>
+
+    <textarea id="latexArea">
+    </textarea>
+    <button onclick="copyToClipboard()">
+        copy
+    </button>
+
+
+    <link rel="stylesheet" href="examples.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"
+          integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X"
+          crossorigin="anonymous">
+
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"
+            integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4"
+            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>
+    <script type="text/javascript" src="iink.min.js"></script>
+  </head>
+
+  <body>
+    <div id="result"></div>
+    <div>
+      <nav>
+        <div class="button-div">
+          <button id="clear" class="nav-btn btn-fab-mini btn-lightBlue" disabled>
+            <img src="assets/img/clear.svg">
+          </button>
+          <button id="undo" class="nav-btn btn-fab-mini btn-lightBlue" disabled>
+            <img src="assets/img/undo.svg">
+          </button>
+          <button id="redo" class="nav-btn btn-fab-mini btn-lightBlue" disabled>
+            <img src="assets/img/redo.svg">
+          </button>
+        </div>
+        <div class="spacer"></div>
+        <button class="classic-btn" id="convert" disabled>Convert</button>
+      </nav>
+      <div id="editor" touch-action="none"></div>
+    </div>
+    <script>
+      const editorElement = document.getElementById('editor');
+      const resultElement = document.getElementById('result');
+      const undoElement = document.getElementById('undo');
+      const redoElement = document.getElementById('redo');
+      const clearElement = document.getElementById('clear');
+      const convertElement = document.getElementById('convert');
+      const latexElement = document.getElementById('latexArea');
+
+      editorElement.addEventListener('changed', (event) => {
+        undoElement.disabled = !event.detail.canUndo;
+        redoElement.disabled = !event.detail.canRedo;
+        clearElement.disabled = event.detail.isEmpty;
+      });
+
+      function copyToClipboard() {
+        var copyText = document.getElementById("latexArea");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        document.execCommand("copy");
+        console.log("Copied")
+      }
+
+      function cleanLatex(latexExport) {
+        if (latexExport.includes('\\\\')) {
+          const steps = '\\begin{align*}' + latexExport + '\\end{align*}';
+          return steps.replace("\\begin{aligned}", "")
+            .replace("\\end{aligned}", "")
+            .replace(new RegExp("(align.{1})", "g"), "aligned");
+        }
+        return latexExport
+          .replace(new RegExp("(align.{1})", "g"), "aligned");
+      }
+
+      editorElement.addEventListener('exported', (evt) => {
+
+        const exports = evt.detail.exports;
+        if (exports && exports['application/x-latex']) {
+          convertElement.disabled = false;
+          katex.render(cleanLatex(exports['application/x-latex']),  resultElement);
+          /////////////////////////////////////////////////////////////////////////////
+          latexElement.innerText = convertText(cleanLatex(exports['application/x-latex']));
+
+          // resultElement.innerHTML = '<span>' + exports['application/x-latex'] + '</span>';
+        } else if (exports && exports['application/mathml+xml']) {
+          convertElement.disabled = false;
+          resultElement.innerText = exports['application/mathml+xml'];
+        } else if (exports && exports['application/mathofficeXML']) {
+          convertElement.disabled = false;
+          resultElement.innerText = exports['application/mathofficeXML'];
+        } else {
+          convertElement.disabled = true;
+          resultElement.innerHTML = '';
+        }
+      });
+      undoElement.addEventListener('click', () => {
+        editorElement.editor.undo();
+      });
+      redoElement.addEventListener('click', () => {
+        editorElement.editor.redo();
+      });
+      clearElement.addEventListener('click', () => {
+        editorElement.editor.clear();
+      });
+      convertElement.addEventListener('click', () => {
+        editorElement.editor.convert();
+      });
+
+      /**
+       * Attach an editor to the document
+       * @param {Element} The DOM element to attach the ink paper
+       * @param {Object} The recognition parameters
+       */
+      iink.register(editorElement, {
+        recognitionParams: {
+          type: 'MATH',
+          protocol: 'WEBSOCKET',
+          server: {
+            scheme: 'https',
+            host: 'webdemoapi.myscript.com',
+            applicationKey: 'b53ffeef-f08c-4d83-ab14-024ac1f2f1b0',
+            hmacKey: '3e851107-52c0-4bf3-a513-cf5777a65d35'
+          },
+          iink: {
+            math: {
+              mimeTypes: ['application/x-latex', 'application/vnd.myscript.jiix']
+            },
+            export: {
+              jiix: {
+                strokes: true
+              }
+            }
+          }
+        }
+      });
+
+      window.addEventListener('resize', () => {
+        editorElement.editor.resize();
+      });
+
+      function convertText(latexText) {
+        console.log(latexText)
+        ans = ""
+        components = latexText.split("\\")
+        for(var i = 0; i < components.length; i++) {
+          if(components[i].slice(0, 5) == "dfrac"){
+            ans += "\\frac"
+            ans += components[i].slice(5)
+          } else if(components[i].slice(0, 4) == "left") {
+            ans += "\\left"
+            ans += components[i].slice(4)
+          } else if(components[i].slice(0, 5) == "right"){
+            ans += "\\right"
+            ans += components[i].slice(5)
+          } else {
+            ans += ("\\" + components[i])
+          }
+        }
+        console.log(ans)
+        return ans.slice(1) // first slash shouldn't count.
+      }
+    </script>
+  </body>
+
+</html>
