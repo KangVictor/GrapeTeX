@@ -97,39 +97,51 @@
       }
 
       async function translateImage(file) {
+        console.log(file)
         var FR = new FileReader();
-        await FR.readAsDataURL(fileReceiver.files[0]);
+        try {
+          FR.readAsDataURL(file);
+        } catch (e){
+          console.log(e)
+          alert("Upload an appropriate file!")
+        }
         
-        $.ajax({
-          url: "https://api.mathpix.com/v3/text",
-          type: 'POST',
-          dataType: 'application/json',
-          headers: {
-            "content-type": "application/json",
-            "app_id": "victork03_naver_com_fb7598_0ad69a",
-            "app_key": "ccaeef64880e00dcb475"
-          },
-          data: JSON.stringify({
-            "src": FR.result , // only supports png for now.
-            // "src": "https://mathpix.com/examples/limit.jpg",
-            "formats": ["text", "data"],
-            "data_options": {
-                "include_asciimath": false,
-                "include_latex": true
+
+        FR.onload = function(e) {
+          console.log(FR.result)
+          $.ajax({
+            url: "https://api.mathpix.com/v3/text",
+            type: 'POST',
+            dataType: 'application/json',
+            headers: {
+              "content-type": "application/json",
+              "app_id": "victork03_naver_com_fb7598_0ad69a",
+              "app_key": "ccaeef64880e00dcb475"
+            },
+            data: JSON.stringify({
+              "src": FR.result , // only supports png for now.
+              // "src": "https://mathpix.com/examples/limit.jpg",
+              "formats": ["text", "data"],
+              "data_options": {
+                  "include_asciimath": false,
+                  "include_latex": true
+              }
+            }),
+            success: function (result) { // this doesn't work for some reason
+              console.log("success....")
+              var ans = JSON.parse(error.responseText).text
+              console.log(error)
+              latexElement.innerText = ans.slice(3, ans.length - 3);
+            },
+            error: function (error) { // this returns a correct input
+              console.log("error.... but is working")
+              var ans = JSON.parse(error.responseText).text
+              console.log(error)
+              latexElement.innerText = ""
+              latexElement.innerText = ans.slice(3, ans.length - 3);
             }
-          }),
-          success: function (result) { // this doesn't work for some reason
-            console.log("success....")
-            console.log(JSON.stringify(data).responseText.text);
-          },
-          error: function (error) { // this returns a correct input
-            console.log("error.... but is working")
-            console.log(FR.result)
-            var ans = JSON.parse(error.responseText).text
-            console.log(error)
-            // latexElement.innerText = ans.slice(3, ans.length - 3);
-          }
-        })
+          })
+        }
 
         // console.log(FR);
 
@@ -236,9 +248,9 @@
           convertElement.disabled = false;
           katex.render(cleanLatex(exports['application/x-latex']),  resultElement);
           /////////////////////////////////////////////////////////////////////////////
+          latexElement.innerText = ""
           latexElement.innerText = convertText(cleanLatex(exports['application/x-latex']));
 
-          // resultElement.innerHTML = '<span>' + exports['application/x-latex'] + '</span>';
         } else if (exports && exports['application/mathml+xml']) {
           convertElement.disabled = false;
           resultElement.innerText = exports['application/mathml+xml'];
