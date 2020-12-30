@@ -43,15 +43,15 @@
         xhr.send();
       }
 
-	function displayLaTeX() {
-		var text = document.getElementById("latexArea").value
-		text = text.replace(/%/g, "%25")
-		text = text.replace(/\\/g, "%5C")
-		text = text.replace(/#/g, "%23")
-		text = text.replace(/$/g, "%24")
-		document.getElementById("result").innerHTML = "<img src=\"http://i.upmath.me/svg/" + text + "\">";
-		console.log(text)
-	}
+      function displayLaTeX() {
+            var text = document.getElementById("latexArea").value
+            text = text.replace(/%/g, "%25")
+            text = text.replace(/\\/g, "%5C")
+            text = text.replace(/#/g, "%23")
+            text = text.replace(/$/g, "%24")
+            document.getElementById("result").innerHTML = "<img src=\"http://i.upmath.me/svg/" + text + "\">";
+            console.log(text)
+      }
 
 	
 
@@ -89,17 +89,20 @@
             success: function (result) { // this doesn't work for some reason
               console.log("success....")
               var ans = JSON.parse(error.responseText).text
-              console.log(error)
-              latexElement.innerText = ans.slice(3, ans.length - 3);
-				displayLaTeX()
+              console.log(result)
+              ans = ans.replace("\\(", "")
+              ans = ans.replace("\\)", "")
+              latexElement.innerText = ans;
+              displayLaTeX()
             },
             error: function (error) { // this returns a correct input
               console.log("error.... but is working")
               var ans = JSON.parse(error.responseText).text
               console.log(error)
-              latexElement.innerText = ""
-              latexElement.innerText = ans.slice(3, ans.length - 3);
-				displayLaTeX()
+              ans = ans.replace("\\(", "")
+              ans = ans.replace("\\)", "")
+              latexElement.innerText = ans;
+              displayLaTeX()
             }
           })
         }
