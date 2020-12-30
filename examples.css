@@ -8,6 +8,7 @@ html {
 
 body {
     margin: 0;
+	overflow: hidden;
 }
 
 body > svg {
@@ -24,6 +25,28 @@ nav {
     border-top: 1px solid #D7DDE3; /*#A9B7C5*/
     border-bottom: 1px solid #D7DDE3; /*#A9B7C5*/
     padding: 12px;
+}
+
+.main-wrapper {
+	min-height: 100vh;
+	min-width: 100vw;
+}
+
+.code {
+	width: 100%;
+	height: 95vh;
+	font-family: monospace;
+	outline: none;
+	resize: none;
+}
+
+.no-padding {
+	padding: 0px !important;
+}
+
+.divider {
+	height: 1px;
+	background-color: gray;
 }
 
 .languages {
@@ -179,8 +202,8 @@ select:focus {
 }
 
 #editor {
-    width: 100vw;
-    height: calc(100vh - 152px);
+    width: 100%;
+    height: 50vh;
     touch-action: none;
 }
 
@@ -204,12 +227,22 @@ select:focus {
     text-align: center;
 }
 
+.result-container {
+	height: 40%; 
+	position: relative;
+}
+
 #result {
     height: 100px;
+	width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: auto;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
 
 /*** Index page ***/
@@ -524,6 +557,5 @@ select:focus {
 }
 
 .button-div {
-    display: flex;
     margin: 5px;
 }
