@@ -36,6 +36,24 @@
         $('#historyArea').val(s);
       }
 
+      function makeTextFile(text) {
+        var textFile = null;
+        var data = new Blob([text], {type: 'text/plain'});
+
+        if (textFile !== null) {
+          window.URL.revokeObjectURL(textFile);
+        }
+
+        textFile = window.URL.createObjectURL(data);
+        return textFile;
+      };
+
+      function downloadText() {
+        var link = document.getElementById('downloadlink');
+        link.href = makeTextFile(historyArea.value);
+        link.style.display = 'block';
+      }
+
       function toDataURL(url, callback) {
         var xhr = new XMLHttpRequest();
         xhr.onload = function() {
@@ -97,6 +115,7 @@
               console.log(result)
               ans = ans.replace("\\(", "")
               ans = ans.replace("\\)", "")
+              latexElement.innerText = ""
               latexElement.innerText = ans;
               displayLaTeX()
             },
@@ -106,6 +125,7 @@
               console.log(error)
               ans = ans.replace("\\(", "")
               ans = ans.replace("\\)", "")
+              latexElement.innerText = ""
               latexElement.innerText = ans;
               displayLaTeX()
             }
