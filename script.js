@@ -12,6 +12,20 @@
     	uploadFile()
 	});
 
+	 $(document).ready(function() {
+		  var $windowWidth = $(window).width();
+		 console.log($windowWidth)
+		 if ($windowWidth < 1130) {
+			 $("body").css("overflow-y", "auto");
+			 $("body").css("overflow-x", "hidden");
+			 $(".code").css("height", "10vh");
+		 }
+		 if ($windowWidth < 768) {
+			 $(".history").css("visibility", "hidden");
+			 $(".history").css("height", "0px");
+		 }
+	  });
+
 	$("#latexArea").on("input change paste", function(){
     	displayLaTeX();
 	})
