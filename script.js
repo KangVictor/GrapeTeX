@@ -7,6 +7,10 @@
       const latexElement = document.getElementById('latexArea');
       const fileReceiver = document.getElementById('fileReceiver');
 
+	jQuery("input#fileReceiver").change(function () {
+    	uploadFile()
+	});
+
       editorElement.addEventListener('changed', (event) => {
         undoElement.disabled = !event.detail.canUndo;
         redoElement.disabled = !event.detail.canRedo;
@@ -19,7 +23,6 @@
         copyText.setSelectionRange(0, 99999);
         document.execCommand("copy");
         console.log("copied")
-		uploadFile()
       }
 
       function toDataURL(url, callback) {
