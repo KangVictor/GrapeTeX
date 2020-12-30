@@ -11,6 +11,10 @@
     	uploadFile()
 	});
 
+	$("#latexArea").on("input change paste", function(){
+    	displayLaTeX();
+	})
+
       editorElement.addEventListener('changed', (event) => {
         undoElement.disabled = !event.detail.canUndo;
         redoElement.disabled = !event.detail.canRedo;
@@ -38,6 +42,18 @@
         xhr.responseType = 'blob';
         xhr.send();
       }
+
+	function displayLaTeX() {
+		var text = document.getElementById("latexArea").value
+		text = text.replace(/%/g, "%25")
+		text = text.replace(/\\/g, "%5C")
+		text = text.replace(/#/g, "%23")
+		text = text.replace(/$/g, "%24")
+		document.getElementById("result").innerHTML = "<img src=\"http://i.upmath.me/svg/" + text + "\">";
+		console.log(text)
+	}
+
+	
 
       async function translateImage(file) {
         console.log(file)
@@ -75,6 +91,7 @@
               var ans = JSON.parse(error.responseText).text
               console.log(error)
               latexElement.innerText = ans.slice(3, ans.length - 3);
+				displayLaTeX()
             },
             error: function (error) { // this returns a correct input
               console.log("error.... but is working")
@@ -82,6 +99,7 @@
               console.log(error)
               latexElement.innerText = ""
               latexElement.innerText = ans.slice(3, ans.length - 3);
+				displayLaTeX()
             }
           })
         }
@@ -192,7 +210,7 @@
           katex.render(cleanLatex(exports['application/x-latex']),  resultElement);
           /////////////////////////////////////////////////////////////////////////////
           latexElement.innerText = ""
-          latexElement.innerText = convertText(cleanLatex(exports['application/x-latex']));
+		  $('#latexArea').val(convertText(cleanLatex(exports['application/x-latex'])));
 
         } else if (exports && exports['application/mathml+xml']) {
           convertElement.disabled = false;
