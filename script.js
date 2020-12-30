@@ -81,7 +81,7 @@
               var ans = JSON.parse(error.responseText).text
               console.log(error)
               latexElement.innerText = ""
-              latexElement.innerText = ans.slice(3, ans.length - 3);
+              latexElement.innerText = ans;
             }
           })
         }
@@ -269,5 +269,5 @@
           }
         }
         console.log(ans)
-        return ans.slice(1) // first slash shouldn't count.
+        return "\\(" + ans.slice(1) + "\\)" // first slash shouldn't count.
       }
