@@ -25,11 +25,18 @@
 
 html {
     font-family: regular;
+	font-size: 18px;
 }
 
 body {
     margin: 0;
 	overflow: hidden;
+}
+
+p {
+	font-family: regular;
+	font-size: 18px;
+	padding-top: 50px;
 }
 
 body > svg {
@@ -107,17 +114,18 @@ button {
 }
 
 .icon {
-	margin-left: 14px;
-	margin-top: 10px;
+	margin-top: 20px;
+	cursor: pointer;
 }
 
 .code {
 	width: 100%;
 	height: 60.6vh;
-	font-family: mono;
+	font-family: monospace;
 	font-size: 18px;
 	outline: none;
 	resize: none;
+	border: none;
 }
 
 .no-padding {
@@ -283,7 +291,7 @@ select:focus {
 
 #editor {
     width: 100%;
-    height: 50vh;
+    height: 40vh;
     touch-action: none;
 }
 
@@ -313,7 +321,7 @@ select:focus {
 }
 
 #result {
-    height: 100px;
+    height: 150px;
 	width: 100%;
     display: flex;
     justify-content: center;
@@ -329,6 +337,23 @@ select:focus {
 
 .index-background {
     background: #f5f5f5;
+}
+
+.history {
+	height:39.4vh;
+	width:100%; 
+	border-right:1px solid #ccc;
+	font-size: 18px; 
+	font-family: monospace;
+	overflow: auto;
+	outline: none;
+	resize: none;
+	border-right: none;
+}
+
+.icon-wrapper {
+	text-align: center; 
+	width: 60px;
 }
 
 @media screen and (min-width: 1024px) {
@@ -460,6 +485,10 @@ select:focus {
     touch-action: manipulation;
     cursor: pointer;
     transition: all 125ms;
+}
+
+button {
+	cursor: pointer;
 }
 
 .example-section .notice {

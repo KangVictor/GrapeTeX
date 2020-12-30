@@ -31,7 +31,7 @@
       }
 
       function addHistory() {
-        var s = latexElement.value + "\n" + historyElement.value
+        var s = historyElement.value + "\n" + latexElement.value
         console.log(s)
         $('#historyArea').val(s);
       }
@@ -77,6 +77,21 @@
             text = text.replace(/$/g, "%24")
             document.getElementById("result").innerHTML = "<img src=\"http://i.upmath.me/svg/" + text + "\">";
             console.log(text)
+      }
+
+	  function downloadPNG(){
+		  var text = document.getElementById("latexArea").value
+            text = text.replace(/%/g, "%25")
+            text = text.replace(/\\/g, "%5C")
+            text = text.replace(/#/g, "%23")
+            text = text.replace(/$/g, "%24")
+		  var dataURL = "http://i.upmath.me/png/" + text
+        var dl = document.createElement("a");
+        document.body.appendChild(dl); // This line makes it work in Firefox.
+        dl.setAttribute("href", dataURL);
+		  dl.setAttribute("target", "_blank");
+        dl.setAttribute("download", "download");
+        dl.click();
       }
 
       async function translateImage(file) {
