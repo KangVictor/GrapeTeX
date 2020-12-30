@@ -100,6 +100,7 @@
               latexElement.innerText = ""
               latexElement.innerText = ans.slice(3, ans.length - 3);
 				displayLaTeX()
+              latexElement.innerText = ans;
             }
           })
         }
@@ -287,5 +288,5 @@
           }
         }
         console.log(ans)
-        return ans.slice(1) // first slash shouldn't count.
+        return "\\(" + ans.slice(1) + "\\)" // first slash shouldn't count.
       }
