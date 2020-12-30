@@ -100,7 +100,6 @@
               latexElement.innerText = ""
               latexElement.innerText = ans.slice(3, ans.length - 3);
 				displayLaTeX()
-              latexElement.innerText = ans;
             }
           })
         }
