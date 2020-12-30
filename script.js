@@ -51,7 +51,8 @@
       function downloadText() {
         var link = document.getElementById('downloadlink');
         link.href = makeTextFile(historyArea.value);
-        link.style.display = 'block';
+        // link.style.display = 'block';
+        downloadlink.click()
       }
 
       function toDataURL(url, callback) {
