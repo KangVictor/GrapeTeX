@@ -5,6 +5,7 @@
       const clearElement = document.getElementById('clear');
       const convertElement = document.getElementById('convert');
       const latexElement = document.getElementById('latexArea');
+      const historyElement = document.getElementById('historyArea');
       const fileReceiver = document.getElementById('fileReceiver');
 
 	jQuery("input#fileReceiver").change(function () {
@@ -27,6 +28,12 @@
         copyText.setSelectionRange(0, 99999);
         document.execCommand("copy");
         console.log("copied")
+      }
+
+      function addHistory() {
+        var s = latexElement.value + "\n" + historyElement.value
+        console.log(s)
+        $('#historyArea').val(s);
       }
 
       function toDataURL(url, callback) {
@@ -52,8 +59,6 @@
             document.getElementById("result").innerHTML = "<img src=\"http://i.upmath.me/svg/" + text + "\">";
             console.log(text)
       }
-
-	
 
       async function translateImage(file) {
         console.log(file)
