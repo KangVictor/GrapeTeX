@@ -1,10 +1,13 @@
-.js .inputfile {
+.js #fileReceiver {
     width: 0.1px;
     height: 0.1px;
     opacity: 0;
+	border: none;
+	background-color: transparent;
     overflow: hidden;
     position: absolute;
     z-index: -1;
+	visibility: hidden;
 }
 
 .inputfile + label {
